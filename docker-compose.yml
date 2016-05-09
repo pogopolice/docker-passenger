@@ -1,0 +1,15 @@
+version: '2'
+services:
+  db:
+    image: postgres
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    links:
+      - db
+    volumes:
+      - "/webapp:/home/app/webapp"
+  
