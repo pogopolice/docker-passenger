@@ -8,7 +8,7 @@ ENV HOME /root
 CMD ["/sbin/my_init"]
 
 # Expose Nginx HTTP service
-EXPOSE 80
+EXPOSE 3000
 
 # Start Nginx / Passenger
 RUN rm -f /etc/service/nginx/down
@@ -24,12 +24,13 @@ ADD rails-env.conf /etc/nginx/main.d/rails-env.conf
 WORKDIR /tmp
 ADD Gemfile /tmp/
 ADD Gemfile.lock /tmp/
-RUN bundle install
+RUN gem install bundler && bundle install --jobs 20 --retry 5
+#RUN bundle install
 
 # Add the Rails app
 ADD . /home/app/webapp
 RUN chown -R app:app /home/app/webapp
 
 # Clean up APT and bundler when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+# RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

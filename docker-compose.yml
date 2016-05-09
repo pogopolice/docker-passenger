@@ -4,12 +4,13 @@ services:
     image: postgres
   web:
     build: .
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - /webapp:/home/app/webapp
     ports:
       - "3000:3000"
     env_file:
       - .env
-    links:
+    depends_on:
       - db
-    volumes:
-      - "/webapp:/home/app/webapp"
   
